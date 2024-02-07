@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+[ -z "$1" ] && echo "Please specify a domain to renew (ex. mydomain.test)" && exit
+
+project_root='/home/express/Sites/kuberaexpress/'
+
+cd -P $project_root
+
+# generate ssl certs
+docker run --rm -v /data/certbot/letsencrypt:/etc/letsencrypt \
+                -v kuberaexpress_appdata:/tmp/letsencrypt  \
+                -v /data/servers-data/certbot/log:/var/log \
+                certbot/certbot renew --non-interactive \
+                --cert-name "$1"  \
+                --cert-path /var/www/html/nginx.crt \
+                --key-path /var/www/html/nginx.key
+
+# copy certs to app container
+sudo cp /data/certbot/letsencrypt/live/kuberaxpress.com/fullchain.pem "$project_root/src/nginx.crt"
+sudo cp /data/certbot/letsencrypt/live/kuberaxpress.com/privkey.pem "$project_root/src/nginx.key"
+sudo chown express "$project_root/src/nginx.crt"
+sudo chown express "$project_root/src/nginx.key"
+bin/copytocontainer nginx.key
+bin/copytocontainer nginx.crt
+bin/docker-compose exec -T -u root app chown app:app nginx.key nginx.crt
+bin/docker-compose exec -T -u root app mv nginx.key nginx.crt /etc/nginx/certs/
+
+# clean ssl files
+rm "$project_root/src/nginx.crt"
+rm "$project_root/src/nginx.key"
+
+# restart app
+bin/restart app
