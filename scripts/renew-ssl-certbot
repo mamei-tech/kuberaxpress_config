@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 [ -z "$1" ] && echo "Please specify a domain to renew (ex. mydomain.test)" && exit
 
-project_root='/home/express/Sites/kuberaexpress/'
+project_root='/home/express/Sites/kuberaexpress-prod/'
 
 cd -P $project_root
 
