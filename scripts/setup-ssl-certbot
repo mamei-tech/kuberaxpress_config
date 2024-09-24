@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 [ -z "$1" ] && echo "Please specify a domain (ex. mydomain.test)" && exit
 
-project_root='/home/express/Sites/kuberaxpress-prod/'
+project_root='/home/express/Sites/kuberaxpress-prod'
 
 cd -P $project_root
 
