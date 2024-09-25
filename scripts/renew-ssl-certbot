@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 [ -z "$1" ] && echo "Please specify a domain to renew (ex. mydomain.test)" && exit
 
-project_root='/home/express/Sites/kuberaexpress/'
+project_root='/home/express/Sites/kuberaxpress-prod'
 
 cd -P $project_root
 
@@ -25,6 +25,7 @@ bin/docker-compose exec -T -u root app chown app:app nginx.key nginx.crt
 bin/docker-compose exec -T -u root app mv nginx.key nginx.crt /etc/nginx/certs/
 
 # clean ssl files
+echo "clean ssl files..."
 rm "$project_root/src/nginx.crt"
 rm "$project_root/src/nginx.key"
 
